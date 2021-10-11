@@ -9,6 +9,7 @@ import { FornecedorService } from './services/fornecedor.service';
 
 import { NgBrazil } from 'ng-brazil';
 import { TextMaskModule } from 'angular2-text-mask';
+import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 
 import { EditarComponent } from './editar/editar.component';
 import { ExcluirComponent } from './excluir/excluir.component';
@@ -32,7 +33,8 @@ import { FornecedorResolver } from './services/fornecedor.resolver';
     ReactiveFormsModule,
     HttpClientModule,
     NgBrazil,
-    TextMaskModule
+    TextMaskModule,
+    NgxSpinnerModule
   ],
   providers: [
     FornecedorService,
