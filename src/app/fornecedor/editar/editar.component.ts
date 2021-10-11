@@ -5,6 +5,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Observable, fromEvent, merge } from 'rxjs';
 
 import { ToastrService } from 'ngx-toastr';
+import { NgBrazilValidators } from 'ng-brazil';
+import { utilsBr } from 'js-brasil';
 
 import { ValidationMessages, GenericValidator, DisplayMessage } from 'src/app/utils/generic-form-validation';
 import { Fornecedor } from '../models/fornecedor';
@@ -32,6 +34,7 @@ export class EditarComponent implements OnInit {
   displayMessage: DisplayMessage = {};
   textoDocumento: string = '';
 
+  MASKS = utilsBr.MASKS;
   tipoFornecedor: number;
   formResult: string = '';
 
@@ -72,8 +75,10 @@ export class EditarComponent implements OnInit {
 
     this.genericValidator = new GenericValidator(this.validationMessages);
 
-    this.fornecedorService.obterPorId(route.params['id'])
-      .subscribe(fornecedor => this.fornecedor = fornecedor);
+    this.fornecedor = this.route.snapshot.data['fornecedor'];
+    this.tipoFornecedor = this.fornecedor.tipoFornecedor;
+    // this.fornecedorService.obterPorId(route.params['id'])
+    //   .subscribe(fornecedor => this.fornecedor = fornecedor);
   }
 
   ngOnInit() {
@@ -97,16 +102,82 @@ export class EditarComponent implements OnInit {
       estado: ['', [Validators.required]],
       fornecedorId: ''
     });
+
+    this.preencherForm();
+
+  }
+
+  preencherForm() {
+
+    this.fornecedorForm.patchValue({
+      id: this.fornecedor.id,
+      nome: this.fornecedor.nome,
+      ativo: this.fornecedor.ativo,
+      tipoFornecedor: this.fornecedor.tipoFornecedor.toString(),
+      documento: this.fornecedor.documento
+    });
+
+    if (this.tipoFornecedorForm().value === "1") {
+      this.documento().setValidators([Validators.required, NgBrazilValidators.cpf]);
+    }
+    else {
+      this.documento().setValidators([Validators.required, NgBrazilValidators.cnpj]);
+    }
+
+    this.enderecoForm.patchValue({
+      id: this.fornecedor.endereco.id,
+      logradouro: this.fornecedor.endereco.logradouro,
+      numero: this.fornecedor.endereco.numero,
+      complemento: this.fornecedor.endereco.complemento,
+      bairro: this.fornecedor.endereco.bairro,
+      cep: this.fornecedor.endereco.cep,
+      cidade: this.fornecedor.endereco.cidade,
+      estado: this.fornecedor.endereco.estado
+    });
   }
 
   ngAfterViewInit() {
+    this.tipoFornecedorForm().valueChanges.subscribe(() => {
+      this.trocarValidacaoDocumento();
+      this.configurarElementosValidacao();
+      this.validarFormulario();
+    });
+
+    this.configurarElementosValidacao();
+  }
+
+  configurarElementosValidacao() {
     let controlBlurs: Observable<any>[] = this.formInputElements
       .map((formControl: ElementRef) => fromEvent(formControl.nativeElement, 'blur'));
 
     merge(...controlBlurs).subscribe(() => {
-      this.displayMessage = this.genericValidator.processarMensagens(this.fornecedorForm);
-      this.mudancasNaoSalvas = true;
+      this.validarFormulario();
     });
+  }
+
+  trocarValidacaoDocumento() {
+
+    if (this.tipoFornecedorForm().value === "1") {
+      this.documento().clearValidators();
+      this.documento().setValidators([Validators.required, NgBrazilValidators.cpf]);
+    }
+
+    else {
+      this.documento().clearValidators();
+      this.documento().setValidators([Validators.required, NgBrazilValidators.cnpj]);
+    }
+  }
+
+  documento(): AbstractControl {
+    return this.fornecedorForm.get('documento');
+  }
+
+  tipoFornecedorForm(): AbstractControl {
+    return this.fornecedorForm.get('tipoFornecedor');
+  }
+
+  validarFormulario() {
+    this.displayMessage = this.genericValidator.processarMensagens(this.fornecedorForm);
   }
 
   editarFornecedor() {
