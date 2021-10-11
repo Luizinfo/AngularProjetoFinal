@@ -22,10 +22,10 @@ export class ExcluirComponent {
       this.fornecedor = this.route.snapshot.data['fornecedor'];
   }
 
-  excluirEvento() {
+  excluirFornecedor() {
     this.fornecedorService.excluirFornecedor(this.fornecedor.id)
       .subscribe(
-        evento => { this.sucessoExclusao(evento) },
+        fornecedor => { this.sucessoExclusao(fornecedor) },
         error => { this.falha() }
       );
   }

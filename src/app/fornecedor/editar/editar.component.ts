@@ -196,7 +196,7 @@ export class EditarComponent implements OnInit {
   }
 
   buscarCep(cep: string) {
-
+    this.spinner.show();
     cep = StringUtils.somenteNumero(cep);
     if (cep.length < 8) return;
 
@@ -204,6 +204,10 @@ export class EditarComponent implements OnInit {
       .subscribe(
         cepRetorno => this.preencherEnderecoConsulta(cepRetorno),
         erro => this.errors.push(erro));
+
+        setTimeout(()=>{
+          this.spinner.hide();
+        },1000);
   }
 
   preencherEnderecoConsulta(cepConsulta: CepConsulta) {
