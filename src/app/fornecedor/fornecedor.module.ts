@@ -14,7 +14,6 @@ import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 import { EditarComponent } from './editar/editar.component';
 import { ExcluirComponent } from './excluir/excluir.component';
 import { DetalhesComponent } from './detalhes/detalhes.component';
-import { HttpClientModule } from '@angular/common/http';
 import { FornecedorResolver } from './services/fornecedor.resolver';
 
 @NgModule({
@@ -31,7 +30,6 @@ import { FornecedorResolver } from './services/fornecedor.resolver';
     FornecedorRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule,
     NgBrazil,
     TextMaskModule,
     NgxSpinnerModule
