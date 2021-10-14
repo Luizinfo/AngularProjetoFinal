@@ -11,6 +11,7 @@ export class ListaComponent implements OnInit {
 
   public produtos: Produto[];
   errorMessage: string;
+  imagens = environment.imagensUrl;
 
   constructor(private produtoService: ProdutoService) { }
 
