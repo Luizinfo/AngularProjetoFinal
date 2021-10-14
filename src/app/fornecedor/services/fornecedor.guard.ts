@@ -22,7 +22,7 @@ return true;
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
 
     if (!this.localStorageUtil.obterTokenUsuario()) {
-      this.router.navigate(['conta/login']);
+      this.router.navigate(['conta/login'], {queryParams: {returnUrl : this.router.url}});
     }
 
     let user = this.localStorageUtil.obterUsuario();
