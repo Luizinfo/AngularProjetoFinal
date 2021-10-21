@@ -13,7 +13,12 @@ exports.config = {
     './src/**/*.e2e-spec.ts'
   ],
   capabilities: {
-    browserName: 'chrome'
+    browserName: 'chrome',
+    marionette : true,
+    acceptInsecureCerts : true
+  },
+  suites:{
+    produto: './src/cadastro-produto/app.cadastro-produto.e2e-spec.ts'
   },
   directConnect: true,
   baseUrl: 'http://localhost:4200/',
